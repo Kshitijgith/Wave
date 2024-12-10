@@ -1,5 +1,18 @@
 const user=require('../models/users');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
+const dotenv=require('dotenv')
+const tokengenrator=(id,email)=>{
+    if(!id||!email){
+        return 'provide id and email'
+    }
+    let token=jwt.sign({id,email},process.env.JWT_SECRET,
+        {
+            expiresIn:process.env.JWT_EXPIRE
+        }
+    )
+    return token
+}
 const Adduser=async(req,res)=>{
     const {Name,Email,Password}=req.body
     if(!Name||!Email||!Password){
@@ -18,8 +31,13 @@ const Adduser=async(req,res)=>{
             email:Email,
             password:pass
         })
+
         await User.save()
-        res.status(200).json({User,message:'User Registered successfully'})
+let token=tokengenrator(User.id,User.email)
+var v=jwt.decode(token);
+v=v.email;
+
+        res.status(200).json({User,token,v,message:'User Registered successfully'})
     }
     catch(error){
         console.log(error);

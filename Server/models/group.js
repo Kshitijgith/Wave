@@ -1,8 +1,12 @@
 const mongoose=require('mongoose');
 const GroupSchema=new mongoose.Schema({
     groupName: { type: String, required: true },
-    groupId: { type: String, required: true },
-    groupMembers: [String], // Array of usernames
+    groupAdmin:{
+      type:[String]
+    },
+    groupMembers: {
+type:[String]
+    }, // Array of usernames
     chats: [
       {
         senderName: { type: String },
@@ -12,4 +16,4 @@ const GroupSchema=new mongoose.Schema({
     ],
     groupNotifications: [String]
 })
-module.exports=mongoose.Model('Group',GroupSchema);
+module.exports=mongoose.model('Group',GroupSchema);
